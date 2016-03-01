@@ -2,6 +2,20 @@ svg {
     touch-action: none;
 }
 
+.jvectormaplegend
+{
+	position: absolute;
+	bottom:10px;
+	left:10px;
+	border:solid 1px #000;
+	background-color:white;
+}
+
+.jvectormap-marker
+{
+	opacity:1;
+}
+
 .jvectormap-container {
     width: 100%;
     height: 100%;

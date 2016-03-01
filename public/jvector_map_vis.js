@@ -1,6 +1,10 @@
 // Include the angular controller
 require('plugins/jVectorMap/jvector_map_visController');
-//require('plugins/tr-k4p-tagcloud/tagcloud.css');
+require('plugins/jVectorMap/jquery-jvectormap-2.0.3.min');
+require('plugins/jVectorMap/jquery-jvectormap-world-mill');
+require('plugins/jVectorMap/geohash');
+
+require('plugins/jVectorMap/jquery-jvectormap-2.0.3.css');
 
 
 
@@ -13,10 +17,16 @@ function JVectorMapProvider(Private) {
 	// Describe our visualization
 	return new TemplateVisType({
 		name: 'jVectorMap', // The internal id of the visualization (must be unique)
-		title: 'jVectorMap', // The title of the visualization, shown to the user
-		description: 'jVector Map Visualizer', // The description of this vis
+		title: 'Offline Map', // The title of the visualization, shown to the user
+		description: 'Offline Map Visualizer using jVectormap.', // The description of this vis
 		icon: 'fa-map', // The font awesome icon of this visualization
 		template: require('plugins/jVectorMap/jvector_map_vis.html'), // The template, that will be rendered for this visualization
+		params: {
+			editor: require('plugins/jVectorMap/jvector_map_vis_editor.html'), // Use this HTML as an options editor for this vis
+			defaults: { // Set default values for paramters (that can be configured in the editor)
+				format: 'HH:mm:ss',nono:'AMA'
+			}
+		},
 		// Define the aggregation your visualization accepts
 		schemas: new Schemas([
 				{
@@ -33,7 +43,7 @@ function JVectorMapProvider(Private) {
 					title: 'Locations',
 					min: 1,
 					max: 1,
-					aggFilter: '!geohash_grid'
+					aggFilter: 'geohash_grid'
 				}
 			])
 	});
