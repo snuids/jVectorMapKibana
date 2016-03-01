@@ -2,7 +2,7 @@
 require('plugins/jVectorMap/jvector_map_visController');
 require('plugins/jVectorMap/jquery-jvectormap-2.0.3.min');
 require('plugins/jVectorMap/jquery-jvectormap-world-mill');
-require('plugins/jVectorMap/geohash');
+
 
 require('plugins/jVectorMap/jquery-jvectormap-2.0.3.css');
 
@@ -24,7 +24,7 @@ function JVectorMapProvider(Private) {
 		params: {
 			editor: require('plugins/jVectorMap/jvector_map_vis_editor.html'), // Use this HTML as an options editor for this vis
 			defaults: { // Set default values for paramters (that can be configured in the editor)
-				format: 'HH:mm:ss',nono:'AMA'
+				maxRadius: 50,minRadius:10
 			}
 		},
 		// Define the aggregation your visualization accepts

@@ -1,13 +1,58 @@
 // Create an Angular module for this plugin
 var module = require('ui/modules').get('jvector_map_vis');
 
-// Minimum and maximum font size tags should have.
-var maxFontSize = 32,
-	minFontSize = 12;
 
 module.controller('JVectorMapController', function($scope, Private) {
 
 	var filterManager = Private(require('ui/filter_manager'));
+
+	$scope.refine_interval=function (interval, cd, mask) 
+	{
+		if (cd&mask)
+			interval[0] = (interval[0] + interval[1])/2;
+	  else
+			interval[1] = (interval[0] + interval[1])/2;
+	}
+	
+	$scope.decodeGeoHash=function(geohash) {
+		var BITS = [16, 8, 4, 2, 1];
+		var BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
+	
+		var is_even = 1;
+		var lat = []; 
+		
+		lat[0] = -90.0;  
+		lat[1] = 90.0;
+
+		var lon = [];
+		lon[0] = -180.0; 
+		lon[1] = 180.0;
+
+		var lat_err = 90.0;  
+		var lon_err = 180.0;
+	
+		for (var i=0; i<geohash.length; i++) {
+			var c = geohash[i];
+			var cd = BASE32.indexOf(c);
+			for (var j=0; j<5; j++) {
+				var mask = BITS[j];
+				if (is_even) 
+				{
+					lon_err /= 2;
+					$scope.refine_interval(lon, cd, mask);
+				} else 
+				{
+					lat_err /= 2;
+					$scope.refine_interval(lat, cd, mask);
+				}
+				is_even = !is_even;
+			}
+		}
+		lat[2] = (lat[0] + lat[1])/2;
+		lon[2] = (lon[0] + lon[1])/2;
+
+		return { latitude: lat, longitude: lon};
+	}
 
 	$scope.filter = function(tag) {
 		// Add a new filter via the filter manager
@@ -65,29 +110,38 @@ module.controller('JVectorMapController', function($scope, Private) {
 			
 			return {
 				label: bucket.key,
-				geo:decodeGeoHash(bucket.key),
+				geo:$scope.decodeGeoHash(bucket.key),
 				value: value
 			};
 		});
 
 		// Calculate the font size for each tag
 		$scope.locations = $scope.locations.map(function(location) {
-			location.radius = (location.value - min) / (max - min) * (maxFontSize - minFontSize) + minFontSize;
-
+			location.radius = ((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius))+$scope.vis.params.minRadius;
+			console.log("Radius:"+location.radius+" min:"+min+" max:"+max+" pmin:"+$scope.vis.params.minRadius+" pmax:"+$scope.vis.params.maxRadius)
 			return location;
 		});
 
+		
+		
+		// Draw Map
+		
+		
 		console.log('Iterating');
-					
+
+		var dynmarkers=[];
+	
 		angular.forEach($scope.locations, function(value, key){
 		     console.log(key + ': ' + value);
 			 console.log(value);
-			 
+			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]], name: value.label,style: {fill: 'rgba(0,255,0,0.5)', r:value.radius}})
 		});
-		
+
 		console.log('Finished');
+		console.log(dynmarkers);
 		
-		// Draw Map
+		try { $('#map').vectorMap('get', 'mapObject').remove(); }
+		catch(err) {}
 		
         $('#map').vectorMap(
   			  {
@@ -99,34 +153,7 @@ module.controller('JVectorMapController', function($scope, Private) {
   			        }
   			      },
   				  backgroundColor: '#C0C0FF',
-  				  markers: [
-  		        {latLng: [41.90, 12.45], name: 'Vatican City'},
-  		        {latLng: [43.73, 7.41], name: 'Monaco'},
-  		        {latLng: [-0.52, 166.93], name: 'Nauru'},
-  		        {latLng: [-8.51, 179.21], name: 'Tuvalu'},
-  		        {latLng: [43.93, 12.46], name: 'San Marino'},
-  		        {latLng: [47.14, 9.52], name: 'Liechtenstein'},
-  		        {latLng: [7.11, 171.06], name: 'Marshall Islands'},
-  			    {latLng: [17.3, -62.73], name: 'Saint Kitts and Nevis',style: {fill: 'rgba(0,255,0,0.5)', r:10}},
-  		        {latLng: [3.2, 73.22], name: 'Maldives',style: {fill: 'rgba(0,0,255,0.5)', r:20}},
-  		        {latLng: [35.88, 14.5], name: 'Malta'},
-  		        {latLng: [12.05, -61.75], name: 'Grenada'},
-  		        {latLng: [13.16, -61.23], name: 'Saint Vincent and the Grenadines'},
-  		        {latLng: [13.16, -59.55], name: 'Barbados'},
-  		        {latLng: [17.11, -61.85], name: 'Antigua and Barbuda'},
-  		        {latLng: [-4.61, 55.45], name: 'Seychelles'},
-  		        {latLng: [7.35, 134.46], name: 'Palau'},
-  		        {latLng: [42.5, 1.51], name: 'Andorra'},
-  		        {latLng: [14.01, -60.98], name: 'Saint Lucia'},
-  		        {latLng: [6.91, 158.18], name: 'Federated States of Micronesia'},
-  		        {latLng: [1.3, 103.8], name: 'Singapore'},
-  		        {latLng: [1.46, 173.03], name: 'Kiribati'},
-  		        {latLng: [-21.13, -175.2], name: 'Tonga'},
-  		        {latLng: [15.3, -61.38], name: 'Dominica'},
-  		        {latLng: [-20.2, 57.5], name: 'Mauritius'},
-  		        {latLng: [26.02, 50.55], name: 'Bahrain'},
-  		        {latLng: [0.33, 6.73], name: 'São Tomé and Príncipe'}
-  		      	]
+  				  markers: dynmarkers
   			}
   	  );
       

@@ -9,6 +9,7 @@ svg {
 	left:10px;
 	border:solid 1px #000;
 	background-color:white;
+	z-index:10;
 }
 
 .jvectormap-marker

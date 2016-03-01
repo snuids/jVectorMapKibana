@@ -1,6 +1,8 @@
 <div class="form-group">
-	<label>Time Format</label>
-	<input type="text" ng-model="vis.params.format" class="form-control">
-	<label>Nono Test</label>
-	<input type="text" ng-model="vis.params.nono" class="form-control">
+  <label>Min location radius - {{ vis.params.minRadius }}px</label>
+  <input type="range" ng-model="vis.params.minRadius" class="form-control" min="5" max="20"/>
+</div>
+<div class="form-group">
+  <label>Max location radius - {{ vis.params.maxRadius }}px</label>
+  <input type="range" ng-model="vis.params.maxRadius" class="form-control" min="21" max="120"/>
 </div>
