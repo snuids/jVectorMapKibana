@@ -24,7 +24,7 @@ function JVectorMapProvider(Private) {
 		params: {
 			editor: require('plugins/jVectorMap/jvector_map_vis_editor.html'), // Use this HTML as an options editor for this vis
 			defaults: { // Set default values for paramters (that can be configured in the editor)
-				maxRadius: 50,minRadius:10
+				maxRadius: 50,minRadius:10,mapBackgroundColor:"#C0C0FF",circleColor:"#00FF00"
 			}
 		},
 		// Define the aggregation your visualization accepts

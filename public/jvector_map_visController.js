@@ -78,18 +78,8 @@ module.controller('JVectorMapController', function($scope, Private) {
 		var locationsAggId = $scope.vis.aggs.bySchemaName['locations'][0].id;
 		// Retrieve the metrics aggregation configured
 		var metricsAgg = $scope.vis.aggs.bySchemaName['locationsize'][0];
-		console.log(metricsAgg);
-		// Get the buckets of that aggregation
-
-
-		console.log('Resp');
-		console.log(resp.aggregations);
-
-
 		var buckets = resp.aggregations[locationsAggId].buckets;
 
-		console.log('buckets');
-		console.log(buckets);
 
 
 		var min = Number.MAX_VALUE,
@@ -119,16 +109,13 @@ module.controller('JVectorMapController', function($scope, Private) {
 		$scope.locations = $scope.locations.map(function(location) {
 			location.radius = parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius))
 				+parseInt($scope.vis.params.minRadius);
-			console.log("Radius:"+location.radius+" min:"+min+" max:"+max+" pmin:"+$scope.vis.params.minRadius+" pmax:"+$scope.vis.params.maxRadius+" pi:"+parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius)))
+			//console.log("Radius:"+location.radius+" min:"+min+" max:"+max+" pmin:"+$scope.vis.params.minRadius+" pmax:"+$scope.vis.params.maxRadius+" pi:"+parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius)))
 			return location;
 		});
-
 		
 		
 		// Draw Map
-		
-		
-		console.log('Iterating');
+			
 
 		var dynmarkers=[];
 	
@@ -138,8 +125,6 @@ module.controller('JVectorMapController', function($scope, Private) {
 			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]], name: value.label,style: {fill: 'rgba(0,255,0,0.5)', r:value.radius}})
 		});
 
-		console.log('Finished');
-		console.log(dynmarkers);
 		
 		try { $('#map').vectorMap('get', 'mapObject').remove(); }
 		catch(err) {}
@@ -153,7 +138,7 @@ module.controller('JVectorMapController', function($scope, Private) {
   						stroke: '#383f47',r:5
   			        }
   			      },
-  				  backgroundColor: '#C0C0FF',
+  				  backgroundColor: $scope.vis.params.mapBackgroundColor,
   				  markers: dynmarkers
   			}
   	  );
