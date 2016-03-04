@@ -95,8 +95,8 @@ module.controller('JVectorMapController', function($scope, Private) {
 			min = Math.min(min, value);
 			max = Math.max(max, value);
 			
-			console.log('bucket');
-			console.log(bucket);
+			//console.log('bucket');
+			//console.log(bucket);
 			
 			return {
 				label: bucket.key,
@@ -107,8 +107,11 @@ module.controller('JVectorMapController', function($scope, Private) {
 
 		// Calculate the font size for each tag
 		$scope.locations = $scope.locations.map(function(location) {
-			location.radius = parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius))
+			if(max!=min)
+				location.radius = parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius))
 				+parseInt($scope.vis.params.minRadius);
+			else
+				location.radius=$scope.vis.params.minRadius;
 			//console.log("Radius:"+location.radius+" min:"+min+" max:"+max+" pmin:"+$scope.vis.params.minRadius+" pmax:"+$scope.vis.params.maxRadius+" pi:"+parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius)))
 			return location;
 		});
