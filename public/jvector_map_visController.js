@@ -14,6 +14,15 @@ module.controller('JVectorMapController', function($scope, Private) {
 			interval[1] = (interval[0] + interval[1])/2;
 	}
 	
+	$scope.hexToRGB = function(hex){
+		 	hex=hex.replace(/#/g,'');
+	    var r = parseInt('0x'+hex[0]+hex[1]);
+	    var g = parseInt('0x'+hex[2]+hex[3]);
+	    var b = parseInt('0x'+hex[4]+hex[5]);
+	//    alert("r="+r+" g="+g+" b="+b);
+	    	return [r,g,b];
+	}
+	
 	$scope.decodeGeoHash=function(geohash) {
 		var BITS = [16, 8, 4, 2, 1];
 		var BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
@@ -121,20 +130,25 @@ module.controller('JVectorMapController', function($scope, Private) {
 			
 
 		var dynmarkers=[];
+
+		var circlecolor=$scope.hexToRGB($scope.vis.params.circleColorMin)		
 	
 		angular.forEach($scope.locations, function(value, key){
-		     console.log(key + ': ' + value);
-			 console.log(value);
-			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]], name: value.label,style: {fill: 'rgba(0,255,0,0.5)', r:value.radius}})
+//		     console.log(key + ': ' + value);
+//			 console.log(value);
+			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]], name: value.label
+				 ,style: {fill: 'rgba('+circlecolor[0]+','+circlecolor[1]+','+circlecolor[2]+','+($scope.vis.params.circleOpacity/100)+')', r:value.radius}})
 		});
 
 		
 		try { $('#map').vectorMap('get', 'mapObject').remove(); }
 		catch(err) {}
 		
+
+		
         $('#map').vectorMap(
   			  {
-  				  map: 'world_mill',
+  				  map: $scope.vis.params.selectedMap+'_mill',
   				  markerStyle: {
   			        initial: {
   			          fill: '#F8E23B',

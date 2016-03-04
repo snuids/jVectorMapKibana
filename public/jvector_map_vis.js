@@ -2,6 +2,7 @@
 require('plugins/jVectorMap/jvector_map_visController');
 require('plugins/jVectorMap/jquery-jvectormap-2.0.3.min');
 require('plugins/jVectorMap/jquery-jvectormap-world-mill');
+require('plugins/jVectorMap/jquery-jvectormap-europe-mill');
 
 
 require('plugins/jVectorMap/jquery-jvectormap-2.0.3.css');
@@ -20,12 +21,13 @@ function JVectorMapProvider(Private) {
 		title: 'Offline Map', // The title of the visualization, shown to the user
 		description: 'Offline Map Visualizer using jVectormap.', // The description of this vis
 		icon: 'fa-map', // The font awesome icon of this visualization
+		maps:['world','europe'],
 		template: require('plugins/jVectorMap/jvector_map_vis.html'), // The template, that will be rendered for this visualization
 		params: {
 			editor: require('plugins/jVectorMap/jvector_map_vis_editor.html'), // Use this HTML as an options editor for this vis
 			defaults: { // Set default values for paramters (that can be configured in the editor)
 				maxRadius: 50,minRadius:10,mapBackgroundColor:"#C0C0FF",circleColorMin:"#00FF00",circleColorMax:"#FF0000"
-				,circleOpacity:"#00FF00"
+				,circleOpacity:50,selectedMap:'world'
 			}
 		},
 		// Define the aggregation your visualization accepts
