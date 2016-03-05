@@ -10,16 +10,15 @@ module.controller('JVectorMapController', function($scope, Private) {
 	{
 		if (cd&mask)
 			interval[0] = (interval[0] + interval[1])/2;
-	  else
+	  	else
 			interval[1] = (interval[0] + interval[1])/2;
 	}
 	
 	$scope.hexToRGB = function(hex){
 		 	hex=hex.replace(/#/g,'');
-	    var r = parseInt('0x'+hex[0]+hex[1]);
-	    var g = parseInt('0x'+hex[2]+hex[3]);
-	    var b = parseInt('0x'+hex[4]+hex[5]);
-	//    alert("r="+r+" g="+g+" b="+b);
+		    var r = parseInt('0x'+hex[0]+hex[1]);
+		    var g = parseInt('0x'+hex[2]+hex[3]);
+		    var b = parseInt('0x'+hex[4]+hex[5]);
 	    	return [r,g,b];
 	}
 	
@@ -97,8 +96,8 @@ module.controller('JVectorMapController', function($scope, Private) {
 
 
 
-		var min = Number.MAX_VALUE,
-			max = - Number.MAX_VALUE;
+		var min = Number.MAX_VALUE;
+		var max = - Number.MAX_VALUE;
 
 
 
@@ -110,9 +109,6 @@ module.controller('JVectorMapController', function($scope, Private) {
 			min = Math.min(min, value);
 			max = Math.max(max, value);
 			
-			//console.log('bucket');
-			//console.log(bucket);
-			
 			return {
 				label: bucket.key,
 				geo:$scope.decodeGeoHash(bucket.key),
@@ -120,30 +116,47 @@ module.controller('JVectorMapController', function($scope, Private) {
 			};
 		});
 
+		var circlecolormin=$scope.hexToRGB($scope.vis.params.circleColorMin)		
+		var circlecolormax=$scope.hexToRGB($scope.vis.params.circleColorMax)		
+		var circlecolor=circlecolormin;
+
+
 		// Calculate the font size for each tag
 		$scope.locations = $scope.locations.map(function(location) {
 			if(max!=min)
-				location.radius = parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius))
+			{
+				var tmpval=(location.value - min) / (max - min);
+				location.radius = parseInt(tmpval * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius))
 				+parseInt($scope.vis.params.minRadius);
-			else
+				
+//				console.log("radius="+location.radius);
+//				console.log("tmpval="+tmpval);
+				
+				circlecolor=[];
+				for(var x=0;x<circlecolormin.length;x++)
+				{
+					/*console.log("min="+circlecolormin[x]+ "max="+circlecolormax[x]+" first="+((location.value - min) / (max - min))
+					+" next="+((location.value - min) / (max - min))*(circlecolormax[x]-circlecolormin[x])+" final="+circlecolormin[x]);*/
+					circlecolor.push(Math.floor(tmpval*(circlecolormax[x]-circlecolormin[x])+circlecolormin[x]));				
+				}
+				location.color=circlecolor;
+				console.log(circlecolor);
+			}
+			else			
 				location.radius=$scope.vis.params.minRadius;
-			//console.log("Radius:"+location.radius+" min:"+min+" max:"+max+" pmin:"+$scope.vis.params.minRadius+" pmax:"+$scope.vis.params.maxRadius+" pi:"+parseInt((location.value - min) / (max - min) * ($scope.vis.params.maxRadius - $scope.vis.params.minRadius)))
-			return location;
-		});
-		
-		
-		// Draw Map
 			
 
+			return location;
+		});
+				
+		// Draw Map
+			
 		var dynmarkers=[];
-
-		var circlecolor=$scope.hexToRGB($scope.vis.params.circleColorMin)		
 	
 		angular.forEach($scope.locations, function(value, key){
-//		     console.log(key + ': ' + value);
-//			 console.log(value);
-			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]], name: value.label
-				 ,style: {fill: 'rgba('+circlecolor[0]+','+circlecolor[1]+','+circlecolor[2]+','+($scope.vis.params.circleOpacity/100)+')', r:value.radius}})
+			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]]
+				 , name: 'lat:'+value.geo.latitude[2]+' lon:'+value.geo.longitude[2]+' ('+value.value+')'
+				 ,style: {fill: 'rgba('+value.color[0]+','+value.color[1]+','+value.color[2]+','+($scope.vis.params.circleOpacity/100)+')', r:value.radius}})
 		});
 
 		
@@ -164,12 +177,8 @@ module.controller('JVectorMapController', function($scope, Private) {
   				  backgroundColor: $scope.vis.params.mapBackgroundColor,
   				  markers: dynmarkers
   			}
-  	  );
-      
-		
+  	  	);     		
 		// End of draw map
-		
-		
 		
 	});
 });

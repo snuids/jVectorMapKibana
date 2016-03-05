@@ -9,6 +9,8 @@ svg {
 	left:10px;
 	border:solid 1px #000;
 	background-color:white;
+	padding:1px;
+	font-size:10px;
 	z-index:10;
 }
 
