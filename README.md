@@ -11,6 +11,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 Simply unzip the content in the plugin folder of Kibana.
 
-Maps provided by: http://jvectormap.com/ which is not free of charge for commercial products.
+Maps provided by: http://jvectormap.com/ are not free of charge for commercial products.
 
 Screenshots here: https://github.com/snuids/jVectorMapKibana/wiki
