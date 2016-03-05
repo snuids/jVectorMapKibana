@@ -20,14 +20,13 @@ function JVectorMapProvider(Private) {
 		name: 'jVectorMap', // The internal id of the visualization (must be unique)
 		title: 'Offline Map', // The title of the visualization, shown to the user
 		description: 'Offline Map Visualizer using jVectormap.', // The description of this vis
-		icon: 'fa-map', // The font awesome icon of this visualization
-		maps:['world','europe'],
+		icon: 'fa-map', // The font awesome icon of this visualization		
 		template: require('plugins/jVectorMap/jvector_map_vis.html'), // The template, that will be rendered for this visualization
 		params: {
 			editor: require('plugins/jVectorMap/jvector_map_vis_editor.html'), // Use this HTML as an options editor for this vis
 			defaults: { // Set default values for paramters (that can be configured in the editor)
 				maxRadius: 50,minRadius:10,mapBackgroundColor:"#C0C0FF",circleColorMin:"#00FF00",circleColorMax:"#FF0000"
-				,circleOpacity:50,selectedMap:'world'
+				,circleOpacity:50,selectedMap:'world',maps:['world','europe']
 			}
 		},
 		// Define the aggregation your visualization accepts

@@ -83,6 +83,12 @@ module.controller('JVectorMapController', function($scope, Private) {
 			return;
 		}
 
+		if($scope.vis.aggs.bySchemaName['locations']== undefined)
+		{
+			$scope.locations = null;
+			return;
+		}
+
 		// Retrieve the id of the configured tags aggregation
 		var locationsAggId = $scope.vis.aggs.bySchemaName['locations'][0].id;
 		// Retrieve the metrics aggregation configured
