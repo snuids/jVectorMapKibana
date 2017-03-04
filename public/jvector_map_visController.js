@@ -142,8 +142,12 @@ module.controller('JVectorMapController', function($scope, Private) {
 				location.color=circlecolor;
 				console.log(circlecolor);
 			}
-			else			
+			else		
+			{	
 				location.radius=$scope.vis.params.minRadius;
+				var singlecolor=[255,0,0];
+				location.color=singlecolor;
+			}
 			
 
 			return location;
@@ -154,7 +158,8 @@ module.controller('JVectorMapController', function($scope, Private) {
 		var dynmarkers=[];
 	
 		angular.forEach($scope.locations, function(value, key){
-			 dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]]
+			if(value.color!=undefined)
+			 	dynmarkers.push({latLng: [value.geo.latitude[2], value.geo.longitude[2]]
 				 , name: 'lat:'+value.geo.latitude[2]+' lon:'+value.geo.longitude[2]+' ('+value.value+')'
 				 ,style: {fill: 'rgba('+value.color[0]+','+value.color[1]+','+value.color[2]+','+($scope.vis.params.circleOpacity/100)+')', r:value.radius}})
 		});
