@@ -16,4 +16,4 @@ Maps provided by: http://jvectormap.com/ are not free of charge for commercial p
 
 Screenshots here: https://github.com/snuids/jVectorMapKibana/wiki
 
-Copyright 2016 Arnaud Marchand
+Copyright 2017 Arnaud Marchand
